@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="5dp"
+        android:padding="5dp">
+
+        <EditText
+            android:id="@+id/editTextText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|top"
+            android:paddingLeft="65dp"
+            android:backgroundTint="@android:color/transparent"
+            android:hint="Search"
+            />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:src="@drawable/baseline_search_24" />
+
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/sort"
+        android:layout_below="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dp"
+        android:paddingLeft="10dp"
+        android:text="Sort"
+        android:textStyle="bold"
+        android:textSize="16dp"/>
+    <CheckBox
+        android:id="@+id/halalcheckBox"
+        android:layout_below="@+id/search"
+        android:layout_toEndOf="@id/sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Halal"
+        app:buttonTint="@color/green"/>
+
+    <CheckBox
+        android:id="@+id/vegetariancheckBox"
+        android:layout_below="@id/search"
+        android:layout_toEndOf="@id/halalcheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vegetarian"
+        app:buttonTint="@color/green"/>
+
+    <CheckBox
+        android:id="@+id/organicCheckBox"
+        android:layout_below="@id/search"
+        android:layout_toEndOf="@id/vegetariancheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Organic"
+        app:buttonTint="@color/green"/>
+
+    <CheckBox
+        android:id="@+id/nonHalalCheckBox"
+        android:layout_below="@id/search"
+        android:layout_toEndOf="@id/organicCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Non-Halal"
+        app:buttonTint="@color/green"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="552dp"
+        android:layout_above="@id/bottom_Navigation"
+        android:layout_below="@id/halalcheckBox"
+        android:layout_marginStart="0dp"
+        android:contentDescription="ScrollContent"
+        android:overScrollMode="never"
+        android:scrollbars="vertical"
+        android:padding="5dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="683dp"
+            android:id="@+id/recyclerView"
+            android:padding="4dp"
+            android:scrollbars="vertical"
+            android:layout_below="@+id/halalcheckBox"/>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_Navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/menu_navigation"
+        app:itemIconTint="@drawable/bottom_navbar_color"
+        app:labelVisibilityMode="unlabeled"
+        app:itemIconSize="35dp"
+        app:itemActiveIndicatorStyle="@style/itemActiveIndicatorStyle"
+        android:theme="@style/BottomNavigationView"/>
+
+
+</RelativeLayout>
