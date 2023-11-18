@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 public class AccountSettingsActivity extends AppCompatActivity {
 
+    // Ruebenn was here!
     // Database helper to interact with user data
     private DatabaseHelper dbHelper;
 
