@@ -9,23 +9,7 @@ public class SharedPreferencesHelper {
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_SESSION_TOKEN = "session_token";
 
-    public static void saveCredentials(Context context, String username, String password) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KEY_USERNAME, username);
-        editor.putString(KEY_PASSWORD, password);
-        editor.apply();
-    }
 
-    public static String getSavedUsername(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(KEY_USERNAME, null);
-    }
-
-    public static String getSavedPassword(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(KEY_PASSWORD, null);
-    }
 
     public static void saveSessionToken(Context context, String sessionToken) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -48,3 +32,4 @@ public class SharedPreferencesHelper {
         editor.apply();
     }
 }
+//test commmit
