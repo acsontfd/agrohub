@@ -9,8 +9,6 @@ public class SharedPreferencesHelper {
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_SESSION_TOKEN = "session_token";
 
-
-
     public static void saveSessionToken(Context context, String sessionToken) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
