@@ -14,6 +14,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private Button loginButton;
     private TextView registerTextView;
+    public String currentuser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
+                currentuser = usernameEditText.getText().toString();
 
                 if (username.isEmpty() || password.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Please enter your login credentials.", Toast.LENGTH_SHORT).show();
@@ -46,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                     LoginHandler loginHandler = new LoginHandler(LoginActivity.this);
 
                     if (loginHandler.authenticateUser(username, password)) {
+
                         // Save a session token upon successful login
                         String sessionToken = generateSessionToken();
                         SharedPreferencesHelper.saveSessionToken(LoginActivity.this, sessionToken);
@@ -82,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void navigateToMainPage() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("username", currentuser);
         startActivity(intent);
         finish();
     }

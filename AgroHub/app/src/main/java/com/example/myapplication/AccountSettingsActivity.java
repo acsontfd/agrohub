@@ -3,6 +3,7 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +35,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private Button Cancel;
     private Button Edit;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +61,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
         Edit = findViewById(R.id.Edit);
 
         // Load current user's data and populate the UI
-        String currentUsername = "test";
+        Intent intent = getIntent();
+        String currentuser = intent.getStringExtra("username");
+        String currentUsername = currentuser;
         User currentUser = dbHelper.getUserByUsername(currentUsername);
         if (currentUser != null) {
             // Display user data
@@ -157,7 +161,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     // Method to reload user data and populate the UI
     private void reloadUserData() {
-        String currentUsername = "test";
+        Intent intent = getIntent();
+        String currentuser = intent.getStringExtra("username");
+        String currentUsername = currentuser;
 
         User currentUser = dbHelper.getUserByUsername(currentUsername);
 

@@ -81,7 +81,6 @@
             android:text="Log Out"
             android:textStyle="bold" />
 
-
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -41,19 +41,8 @@ public class CommunityActivity extends AppCompatActivity {
 
         // Retrieve logged-in username from intent and fetch full name from the database
         Intent intent = getIntent();
-        if (intent != null) {
-            String loggedInUsername = intent.getStringExtra("test");
-
-            String userFullName = dbHelper.getUserFullNameByUsername(loggedInUsername);
-
-            // Log and display the retrieved full name
-            Log.d("FullNameDebug", "Full Name from DB: " + userFullName);
-            if (userFullName != null && !userFullName.isEmpty()) {
-                fullNameText.setText(userFullName);
-            } else {
-                fullNameText.setText("No Full Name Found"); // Set a default value for debugging
-            }
-        }
+        String currentuser = intent.getStringExtra("username");
+        fullNameText.setText(currentuser);
 
         // Retrieve posts from the database and set up RecyclerView
         List<Post> postList = pdbHelper.getAllPosts();
@@ -67,7 +56,9 @@ public class CommunityActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), AddPostActivity.class));
+                Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
+                intent.putExtra("username",currentuser);
+                startActivity(intent);
             }
         });
 
@@ -87,8 +78,10 @@ public class CommunityActivity extends AppCompatActivity {
                         return true; // Prevent reloading the same page
                     } else if (id == R.id.profile) {
                         intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        intent.putExtra("username",currentuser);
                     } else if (id == R.id.home) {
                         intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra("username",currentuser);
                     }
 
                     // Start the selected activity and update current page

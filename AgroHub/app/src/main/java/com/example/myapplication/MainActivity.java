@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ExampleFarm> filteredList;
     ArrayList<ExampleFarm> exampleList = new ArrayList<>();
     ExampleAdapter exampleAdapter;
+    public String currentuser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         nonHalalCheckBox = findViewById(R.id.nonHalalCheckBox);
 
         BottomNavigationView bnv = findViewById(R.id.bottom_Navigation);
+
+        Intent intent = getIntent();
+        currentuser = intent.getStringExtra("username");
 
         final int[] currentPageId = {R.id.home};
         bnv.setSelectedItemId(currentPageId[0]);
@@ -109,8 +113,10 @@ public class MainActivity extends AppCompatActivity {
                         return true; // Prevent reloading the same page
                     } else if (id == R.id.profile) {
                         intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        intent.putExtra("username",currentuser);
                     } else if (id == R.id.community) {
                         intent = new Intent(getApplicationContext(), CommunityActivity.class);
+                        intent.putExtra("username",currentuser);
                     }
 
                     if (intent != null) {

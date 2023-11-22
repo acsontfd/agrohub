@@ -41,21 +41,8 @@ public class AddPostActivity extends AppCompatActivity {
 
         // Getting logged-in username from intent and retrieving full name
         Intent intent = getIntent();
-        if (intent != null) {
-            String loggedInUsername = intent.getStringExtra("test");
-
-            String userFullName = dbHelper.getUserFullNameByUsername(loggedInUsername);
-
-            // Log the retrieved full name for debugging purposes
-            Log.d("FullNameDebug", "Full Name from DB: " + userFullName);
-
-            // Display the retrieved full name on the UI
-            if (userFullName != null && !userFullName.isEmpty()) {
-                fullNameText.setText(userFullName);
-            } else {
-                fullNameText.setText("No Full Name Found"); // Set a default value for debugging
-            }
-        }
+        String currentuser = intent.getStringExtra("username");
+        fullNameText.setText(currentuser);
 
         // Button to select farm with toast notification
         ImageButton farm = findViewById(R.id.imageButtonFarm);
@@ -86,7 +73,9 @@ public class AddPostActivity extends AppCompatActivity {
                     toast = Toast.makeText(AddPostActivity.this, "Your Post and Review has been posted", Toast.LENGTH_SHORT);
                     toast.show();
                     // Navigate to CommunityActivity after successful post addition
-                    startActivity(new Intent(getApplicationContext(), CommunityActivity.class));
+                    Intent intent = new Intent(getApplicationContext(), CommunityActivity.class);
+                    intent.putExtra("username",currentuser);
+                    startActivity(intent);
                     overridePendingTransition(0, 0);
                 } else {
                     // Handle insertion failure

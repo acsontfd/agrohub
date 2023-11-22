@@ -24,6 +24,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Dialog confirmationDialog;
     private Button posthistory;
     private DatabaseHelper dbHelper;
+
     TextView fullNameText;
 
 
@@ -42,19 +43,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Retrieve the username from the Intent
         Intent intent = getIntent();
-        if (intent != null) {
-            String loggedInUsername = intent.getStringExtra("");
+        String currentuser = intent.getStringExtra("username");
+        fullNameText.setText(currentuser);
 
-            // Now you can use this loggedInUsername to fetch the full name from the database
-            String userFullName = dbHelper.getUserFullNameByUsername(loggedInUsername);
-
-            // Update the UI element (fullNameText) with the retrieved full name
-            if (userFullName != null && !userFullName.isEmpty()) {
-                fullNameText.setText(userFullName);
-            } else {
-                fullNameText.setText("No Full Name Found"); // Set a default value for debugging
-            }
-        }
 
         // Set up a confirmation dialog for logout
         confirmationDialog = new Dialog(this);
@@ -78,10 +69,12 @@ public class ProfileActivity extends AppCompatActivity {
 
                     if (id == R.id.community) {
                         intent = new Intent(getApplicationContext(), CommunityActivity.class);
+                        intent.putExtra("username",currentuser);
                     } else if (id == R.id.profile) {
                         return true; // Prevent reloading the same page
                     } else if (id == R.id.home) {
                         intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra("username",currentuser);
                     }
 
                     if (intent != null) {
@@ -92,6 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
                         return true;
                     }
                 }
+
                 return false;
             }
         });
@@ -141,7 +135,9 @@ public class ProfileActivity extends AppCompatActivity {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),AccountSettingsActivity.class));
+                Intent intent = new Intent(getApplicationContext(),AccountSettingsActivity.class);
+                intent.putExtra("username", currentuser);
+                startActivity(intent);
             }
         });
     }
