@@ -36,7 +36,6 @@ public class AddPostActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private postDatabaseHelper pdbHelper;
     private DatabaseHelper dbHelper;
-    TextView fullNameText;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -53,11 +52,9 @@ public class AddPostActivity extends AppCompatActivity {
 
         pdbHelper = new postDatabaseHelper(this);
         dbHelper = new DatabaseHelper(this);
-        fullNameText = findViewById(R.id.fullNameText);
 
         Intent intent = getIntent();
         String currentuser = intent.getStringExtra("username");
-        fullNameText.setText(currentuser);
 
         selectImage.setOnClickListener(new View.OnClickListener() {
             @Override
