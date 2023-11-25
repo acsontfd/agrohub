@@ -190,22 +190,23 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_STORAGE_PERMISSION:
                 if (grantResults.length > 0) {
                     boolean READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED;
 
-                    if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
-                        // perform action when allow permission success
+                    if (READ_EXTERNAL_STORAGE) {
+                        // READ_EXTERNAL_STORAGE permission granted
+                        // You can handle this case here
                     } else {
+                        // READ_EXTERNAL_STORAGE permission not granted
                         Toast.makeText(this, "Allow permission for storage access!", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
         }
     }
+
 }
