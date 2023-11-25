@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/serviceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/usernameText"
+            android:text="line 1"
+            android:textSize="20sp"
+            />
+
+        <ImageView
+            android:id="@+id/postImageFeed"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/serviceText"
+            android:visibility="gone"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            />
+
+        <RatingBar
+            android:id="@+id/ratingStar"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_below="@+id/postImageFeed"
+            android:progressTint="@color/yellow"
+            android:stepSize="0.1"
+            android:isIndicator="true" />
+
+        <TextView
+            android:id="@+id/usernameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:text="line 2"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

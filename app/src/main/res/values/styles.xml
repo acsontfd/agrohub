@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DialogButton">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="BottomNavigationView" parent="Widget.Design.BottomNavigationView">
+        <item name="iconSize">32dp</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+    </style>
+    <style name="itemActiveIndicatorStyle" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@android:color/transparent</item>
+    </style>
+    <style name="RadioButtonStyle" parent="Theme.AppCompat.DayNight">
+        <item name="colorAccent">@color/green</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+    <style name="backgroundImage" parent="Theme.AppCompat.Light">
+        <item name="android:background">@drawable/profile_background</item>
+        <item name="android:backgroundTint">@color/tintgreen</item>
+        <item name="android:backgroundTintMode">multiply</item>
+    </style>
+    <style name="TransparentDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+</resources>

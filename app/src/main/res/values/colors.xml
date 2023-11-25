@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="grey">#FF222222</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#4CAF50</color>
+    <color name="darkgreen">#003300</color>
+    <color name="mint">#DDFFE7</color>
+    <color name="lightgreen">#E9FCE9</color>
+    <color name="tintgreen">#77C8E6C9</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="text">#9966BB6A</color>
+    <color name="bottom_navigation_item_icon_color_active">#4CAF50</color>
+    <color name="bottom_navigation_item_icon_color_inactive">#003300</color>
+</resources>
