@@ -55,6 +55,9 @@ public class AddPostActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String currentuser = intent.getStringExtra("username");
+        String sessionToken = SharedPreferencesHelper.getSessionToken(this);
+        String profilePicturePath = SharedPreferencesHelper.getUserPicturePath(this, sessionToken);
+        String rememberusername = SharedPreferencesHelper.getUsername(this,sessionToken);
 
         selectImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +72,16 @@ public class AddPostActivity extends AppCompatActivity {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 String currentuser = intent.getStringExtra("username");
+                String rememberuser;
+                if(currentuser != null){
+                    rememberuser = currentuser;
+                }else{
+                    rememberuser = rememberusername;
+                }
                 String service = serviceEditText.getText().toString();
                 float rating = ratingBar.getRating();
                 String imagePath = null;
@@ -81,7 +93,7 @@ public class AddPostActivity extends AppCompatActivity {
                 }
 
                 // Fetch the user from the database
-                User user = dbHelper.getUserByUsername(currentuser);
+                User user = dbHelper.getUserByUsername(rememberuser);
 
                 if (user != null) {
                     String username = user.getName();
