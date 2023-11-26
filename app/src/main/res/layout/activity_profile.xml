@@ -15,11 +15,12 @@
 
         <ImageView
             android:id="@+id/profilePic"
-            android:layout_width="178dp"
-            android:layout_height="172dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
             android:src="@drawable/user"
+            android:scaleType="centerCrop"
             android:backgroundTint="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
