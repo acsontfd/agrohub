@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -76,7 +75,6 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     LoginHandler loginHandler = new LoginHandler(LoginActivity.this);
 
-                    // Inside your LoginActivity's loginButton click listener
                     if (loginHandler.authenticateUser(username, password)) {
                         // Save session token and username if "Remember Me" is checked
                         if (rememberCheckBox.isChecked()) {
@@ -84,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                             SharedPreferencesHelper.saveSessionToken(LoginActivity.this, sessionToken);
                             SharedPreferencesHelper.saveUsername(LoginActivity.this, sessionToken, username);
 
-                            // Retrieve the profile picture path and username for the logged-in user
+                            // Retrieve the profile picture path for the logged-in user
                             DatabaseHelper dbHelper = new DatabaseHelper(LoginActivity.this);
                             User loggedInUser = dbHelper.getUserByUsername(username);
                             if (loggedInUser != null) {
@@ -97,11 +95,6 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.makeText(LoginActivity.this, "Profile picture path is empty or null.", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-
-                                // Get the saved username
-                                String savedUsername = SharedPreferencesHelper.getUsername(LoginActivity.this, sessionToken);
-
-                                // Continue with your login logic...
                             } else {
                                 // Handle the case where the user is not found
                                 SharedPreferencesHelper.clearSavedCredentials(LoginActivity.this);
@@ -118,7 +111,6 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(LoginActivity.this, "Incorrect Credentials.", Toast.LENGTH_SHORT).show();
                     }
-
                 }
             }
         });

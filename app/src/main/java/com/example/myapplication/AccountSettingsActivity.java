@@ -78,7 +78,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String currentuser = intent.getStringExtra("username");
         String currentUsername = currentuser;
-
         User currentUser = dbHelper.getUserByUsername(currentUsername);
         if (currentUser != null) {
             // Display user data
@@ -93,9 +92,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
             EmailEdit.setText(currentUser.getEmail());
             PasswordEdit.setText(currentUser.getPassword());
             PhoneNumberEdit.setText(currentUser.getPhoneNumber());
-
             existingImageUri = Uri.parse(currentUser.getProfilePicturePath());
-
             if (existingImageUri != null) {
                 profileImageView.setImageURI(existingImageUri);
             } else {
@@ -103,20 +100,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 profileImageView.setImageResource(R.drawable.user);
             }
         }
-
-        // Retrieve profile picture path from SharedPreferences
-        String sessionToken = SharedPreferencesHelper.getSessionToken(this);
-        String profilePicturePath = SharedPreferencesHelper.getUserPicturePath(this, sessionToken);
-
-        // Check if profilePicturePath is available and set it to profileImageView
-        if (profilePicturePath != null && !profilePicturePath.isEmpty()) {
-            Uri profilePictureUri = Uri.parse(profilePicturePath);
-            profileImageView.setImageURI(profilePictureUri);
-        } else {
-            // Set a default placeholder image here
-            profileImageView.setImageResource(R.drawable.user);
-        }
-
 
         // Disable editing initially
         setEditingEnabled(false);
