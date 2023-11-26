@@ -75,45 +75,38 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     LoginHandler loginHandler = new LoginHandler(LoginActivity.this);
 
+                    // Inside the onClick method of loginButton.setOnClickListener
                     if (loginHandler.authenticateUser(username, password)) {
-                        // Save session token and username if "Remember Me" is checked
-                        if (rememberCheckBox.isChecked()) {
+                        // Retrieve the profile picture path for the logged-in user
+                        DatabaseHelper dbHelper = new DatabaseHelper(LoginActivity.this);
+                        User loggedInUser = dbHelper.getUserByUsername(username);
+
+                        if (loggedInUser != null) {
+                            String profilePicturePath = loggedInUser.getProfilePicturePath();
+
+                            // Save the profile picture path regardless of "Remember Me" status
+                            SharedPreferencesHelper.saveUserPicturePath(LoginActivity.this, "", profilePicturePath);
+
+                            // Save session token and username if "Remember Me" is checked or not
                             String sessionToken = generateSessionToken();
                             SharedPreferencesHelper.saveSessionToken(LoginActivity.this, sessionToken);
                             SharedPreferencesHelper.saveUsername(LoginActivity.this, sessionToken, username);
+                            SharedPreferencesHelper.saveUserPicturePath(LoginActivity.this, sessionToken, profilePicturePath);
 
-                            // Retrieve the profile picture path for the logged-in user
-                            DatabaseHelper dbHelper = new DatabaseHelper(LoginActivity.this);
-                            User loggedInUser = dbHelper.getUserByUsername(username);
-                            if (loggedInUser != null) {
-                                String profilePicturePath = loggedInUser.getProfilePicturePath();
-                                if (profilePicturePath != null && !profilePicturePath.isEmpty()) {
-                                    SharedPreferencesHelper.saveUserPicturePath(LoginActivity.this, sessionToken, profilePicturePath);
-                                } else {
-                                    // Handle the case where the profile picture path is empty or null
-                                    SharedPreferencesHelper.clearSavedCredentials(LoginActivity.this);
-                                    Toast.makeText(LoginActivity.this, "Profile picture path is empty or null.", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                            } else {
-                                // Handle the case where the user is not found
-                                SharedPreferencesHelper.clearSavedCredentials(LoginActivity.this);
-                                Toast.makeText(LoginActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
+                            Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                            navigateToMainPage();
                         } else {
-                            // Clear any existing session token if "Remember Me" is unchecked
+                            // Handle the case where the user is not found
                             SharedPreferencesHelper.clearSavedCredentials(LoginActivity.this);
+                            Toast.makeText(LoginActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
                         }
-
-                        Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                        navigateToMainPage();
                     } else {
                         Toast.makeText(LoginActivity.this, "Incorrect Credentials.", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
+
 
 
         registerTextView.setOnClickListener(new View.OnClickListener() {
