@@ -43,14 +43,21 @@ public class ProfileActivity extends AppCompatActivity {
         delete = findViewById(R.id.delete);
         dbHelper = new DatabaseHelper(this);
 
-        // Retrieve the username from the Intent
-        Intent intent = getIntent();
-        String currentuser = intent.getStringExtra("username");
-        fullNameText.setText(currentuser);
-
         // Get profile picture path associated with the session token
         String sessionToken = SharedPreferencesHelper.getSessionToken(this);
         String profilePicturePath = SharedPreferencesHelper.getUserPicturePath(this, sessionToken);
+
+        // Retrieve the username from the Intent
+        Intent intent = getIntent();
+        String currentuser = intent.getStringExtra("username");
+        String rememberusername = SharedPreferencesHelper.getUsername(this,sessionToken);
+
+        if (currentuser != null){
+            fullNameText.setText(currentuser);
+        }
+        else {
+            fullNameText.setText(rememberusername);
+        }
 
         // Set the profile picture if available
         if (profilePicturePath != null && !profilePicturePath.isEmpty()) {

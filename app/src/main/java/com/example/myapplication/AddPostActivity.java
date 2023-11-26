@@ -78,33 +78,41 @@ public class AddPostActivity extends AppCompatActivity {
                 if (selectedImageUri != null) {
                     // Get the actual file path from the URI
                     imagePath = getRealPathFromURI(selectedImageUri);
-
                 }
 
-                // Create a new Post object with the entered service, rating, and image path
-                Post post = new Post();
+                // Fetch the user from the database
                 User user = dbHelper.getUserByUsername(currentuser);
-                String username = user.getName();
-                post.setService(service);
-                post.setRating(rating);
-                post.setUsername(username);
-                post.setImagePath(imagePath); // Set the image path to the Post object
 
-                // Add the post to the database
-                long userPost = pdbHelper.addPostWithImage(post, imagePath);
+                if (user != null) {
+                    String username = user.getName();
 
-                // Handle post insertion status
-                if (userPost != -1) {
-                    Toast.makeText(AddPostActivity.this, "Your Post and Review have been posted", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), CommunityActivity.class);
-                    intent.putExtra("username",currentuser);
-                    startActivity(intent);
-                    overridePendingTransition(0, 0);
+                    // Create a new Post object with the entered service, rating, and image path
+                    Post post = new Post();
+                    post.setService(service);
+                    post.setRating(rating);
+                    post.setUsername(username);
+                    post.setImagePath(imagePath); // Set the image path to the Post object
+
+                    // Add the post to the database
+                    long userPost = pdbHelper.addPostWithImage(post, imagePath);
+
+                    // Handle post insertion status
+                    if (userPost != -1) {
+                        Toast.makeText(AddPostActivity.this, "Your Post and Review have been posted", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), CommunityActivity.class);
+                        intent.putExtra("username", currentuser);
+                        startActivity(intent);
+                        overridePendingTransition(0, 0);
+                    } else {
+                        Toast.makeText(AddPostActivity.this, "Failed to save post", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(AddPostActivity.this, "Failed to save post", Toast.LENGTH_SHORT).show();
+                    // Handle the case where the user is null
+                    Toast.makeText(AddPostActivity.this, "User not found", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
 
     }
     private void openGallery(){

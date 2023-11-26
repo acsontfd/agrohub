@@ -49,13 +49,19 @@ public class CommunityActivity extends AppCompatActivity {
         fullNameText = findViewById(R.id.fullNameText);
         profilePic = findViewById(R.id.profilePicture);
 
-        Intent intent = getIntent();
-        String currentuser = intent.getStringExtra("username");
-        fullNameText.setText(currentuser);
-
-
         String sessionToken = SharedPreferencesHelper.getSessionToken(this);
         String profilePicturePath = SharedPreferencesHelper.getUserPicturePath(this, sessionToken);
+        String rememberusername = SharedPreferencesHelper.getUsername(this,sessionToken);
+
+        Intent intent = getIntent();
+        String currentuser = intent.getStringExtra("username");
+
+        if (currentuser != null){
+            fullNameText.setText(currentuser);
+        }
+        else {
+            fullNameText.setText(rememberusername);
+        }
 
         // Set the profile picture if available
         if (profilePicturePath != null && !profilePicturePath.isEmpty()) {

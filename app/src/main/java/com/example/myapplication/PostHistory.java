@@ -32,17 +32,34 @@ public class PostHistory extends AppCompatActivity {
         String currentuser = intent.getStringExtra("username");
         pdbHelper = new postDatabaseHelper(this);
 
+        String sessionToken = SharedPreferencesHelper.getSessionToken(this);
+        String rememberusername = SharedPreferencesHelper.getUsername(this, sessionToken);
 
         // Retrieve all posts from the database
         exampleList = (ArrayList<Post>) pdbHelper.getPostsForUser(currentuser);
 
-        // Set up RecyclerView and its adapter
-        mRecyclerView = findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        postAdapter = new PostAdapter(this, exampleList);
+        if (currentuser != null) {
+            exampleList = (ArrayList<Post>) pdbHelper.getPostsForUser(currentuser);
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(postAdapter);
+            // Set up RecyclerView and its adapter
+            mRecyclerView = findViewById(R.id.recyclerView);
+            mRecyclerView.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(this);
+            postAdapter = new PostAdapter(this, exampleList);
+
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setAdapter(postAdapter);
+        } else {
+            exampleList = (ArrayList<Post>) pdbHelper.getPostsForUser(rememberusername);
+
+            // Set up RecyclerView and its adapter
+            mRecyclerView = findViewById(R.id.recyclerView);
+            mRecyclerView.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(this);
+            postAdapter = new PostAdapter(this, exampleList);
+
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setAdapter(postAdapter);
+        }
     }
 }

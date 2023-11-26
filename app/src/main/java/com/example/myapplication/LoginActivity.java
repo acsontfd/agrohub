@@ -84,23 +84,27 @@ public class LoginActivity extends AppCompatActivity {
                         if (loggedInUser != null) {
                             String profilePicturePath = loggedInUser.getProfilePicturePath();
 
-                            // Save the profile picture path regardless of "Remember Me" status
-                            SharedPreferencesHelper.saveUserPicturePath(LoginActivity.this, "", profilePicturePath);
-
-                            // Save session token and username if "Remember Me" is checked or not
-                            String sessionToken = generateSessionToken();
-                            SharedPreferencesHelper.saveSessionToken(LoginActivity.this, sessionToken);
-                            SharedPreferencesHelper.saveUsername(LoginActivity.this, sessionToken, username);
-                            SharedPreferencesHelper.saveUserPicturePath(LoginActivity.this, sessionToken, profilePicturePath);
+                            if (!rememberCheckBox.isChecked()) {
+                                // Save the profile picture path regardless of "Remember Me" status
+                                SharedPreferencesHelper.saveUserPicturePath(LoginActivity.this, "", profilePicturePath);
+                                SharedPreferencesHelper.saveUserPicturePath(LoginActivity.this, sessionToken, profilePicturePath);
+                                SharedPreferencesHelper.saveUsername(LoginActivity.this, "", username);
+                            } else {
+                                // Save session token and username if "Remember Me" is checked or not
+                                String sessionToken = generateSessionToken();
+                                SharedPreferencesHelper.saveSessionToken(LoginActivity.this, sessionToken);
+                                SharedPreferencesHelper.saveUsername(LoginActivity.this, sessionToken, username);
+                                SharedPreferencesHelper.saveUserPicturePath(LoginActivity.this, sessionToken, profilePicturePath);
+                            }
 
                             Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                             navigateToMainPage();
-                        } else {
-                            // Handle the case where the user is not found
-                            SharedPreferencesHelper.clearSavedCredentials(LoginActivity.this);
-                            Toast.makeText(LoginActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
-                        }
                     } else {
+                        // Handle the case where the user is not found
+                        SharedPreferencesHelper.clearSavedCredentials(LoginActivity.this);
+                        Toast.makeText(LoginActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
                         Toast.makeText(LoginActivity.this, "Incorrect Credentials.", Toast.LENGTH_SHORT).show();
                     }
                 }
