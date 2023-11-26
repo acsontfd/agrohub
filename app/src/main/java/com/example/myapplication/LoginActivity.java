@@ -76,10 +76,31 @@ public class LoginActivity extends AppCompatActivity {
                     LoginHandler loginHandler = new LoginHandler(LoginActivity.this);
 
                     if (loginHandler.authenticateUser(username, password)) {
-                        // Save a session token only if "Remember Me" is checked
+                        // Save session token and username if "Remember Me" is checked
                         if (rememberCheckBox.isChecked()) {
                             String sessionToken = generateSessionToken();
                             SharedPreferencesHelper.saveSessionToken(LoginActivity.this, sessionToken);
+                            SharedPreferencesHelper.saveUsername(LoginActivity.this, sessionToken, username);
+
+                            // Retrieve the profile picture path for the logged-in user
+                            DatabaseHelper dbHelper = new DatabaseHelper(LoginActivity.this);
+                            User loggedInUser = dbHelper.getUserByUsername(username);
+                            if (loggedInUser != null) {
+                                String profilePicturePath = loggedInUser.getProfilePicturePath();
+                                if (profilePicturePath != null && !profilePicturePath.isEmpty()) {
+                                    SharedPreferencesHelper.saveUserPicturePath(LoginActivity.this, sessionToken, profilePicturePath);
+                                } else {
+                                    // Handle the case where the profile picture path is empty or null
+                                    SharedPreferencesHelper.clearSavedCredentials(LoginActivity.this);
+                                    Toast.makeText(LoginActivity.this, "Profile picture path is empty or null.", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            } else {
+                                // Handle the case where the user is not found
+                                SharedPreferencesHelper.clearSavedCredentials(LoginActivity.this);
+                                Toast.makeText(LoginActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                         } else {
                             // Clear any existing session token if "Remember Me" is unchecked
                             SharedPreferencesHelper.clearSavedCredentials(LoginActivity.this);
@@ -93,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         registerTextView.setOnClickListener(new View.OnClickListener() {
             @Override

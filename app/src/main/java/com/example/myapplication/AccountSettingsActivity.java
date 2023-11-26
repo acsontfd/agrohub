@@ -2,17 +2,18 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class AccountSettingsActivity extends AppCompatActivity {
+    public static final int PICK_IMAGE_REQUEST = 1;
 
     // Database helper to interact with user data
     private DatabaseHelper dbHelper;
@@ -22,6 +23,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private TextView username;
     private TextView Email;
     private TextView PhoneNumber;
+
+    // Profile Picture
+    private ImageView profileImageView;
+    private Uri selectedImageUri; // Declare selectedImageUri
+    private Uri existingImageUri; // Store existing image URI
+
+
 
     // EditText fields for editing user information
     private EditText fullNameEdit;
@@ -34,6 +42,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private Button Confirm;
     private Button Cancel;
     private Button Edit;
+    private Button changeProfilePictureButton;
+
+    public AccountSettingsActivity() {
+    }
 
 
     @Override
@@ -55,6 +67,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
         EmailEdit = findViewById(R.id.emailEdit);
         PasswordEdit = findViewById(R.id.passwordEdit);
         PhoneNumberEdit = findViewById(R.id.phoneNumberEdit);
+        profileImageView = findViewById(R.id.profileImageView);
+        changeProfilePictureButton = findViewById(R.id.changeProfilePictureButton);
 
         Confirm = findViewById(R.id.Confirm);
         Cancel = findViewById(R.id.Cancel);
@@ -78,10 +92,27 @@ public class AccountSettingsActivity extends AppCompatActivity {
             EmailEdit.setText(currentUser.getEmail());
             PasswordEdit.setText(currentUser.getPassword());
             PhoneNumberEdit.setText(currentUser.getPhoneNumber());
+            existingImageUri = Uri.parse(currentUser.getProfilePicturePath());
+            if (existingImageUri != null) {
+                profileImageView.setImageURI(existingImageUri);
+            } else {
+                // Set a default placeholder image here
+                profileImageView.setImageResource(R.drawable.user);
+            }
         }
 
         // Disable editing initially
         setEditingEnabled(false);
+
+        changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Intent to open gallery for image selection
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, PICK_IMAGE_REQUEST);
+            }
+        });
+
 
         // Enable editing on Edit button click
         Edit.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +136,11 @@ public class AccountSettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 reloadUserData();
                 setEditingEnabled(false);
+
+                // Reset profileImageView to the existing image
+                if (existingImageUri != null) {
+                    profileImageView.setImageURI(existingImageUri);
+                }
             }
         });
     }
@@ -133,6 +169,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
         Confirm.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
         Cancel.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
         Edit.setVisibility(isEnabled ? View.GONE : View.VISIBLE);
+
+        // Show/hide changeProfilePictureButton based on editing mode
+        changeProfilePictureButton.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
+
     }
 
     // Method to update user data in the database
@@ -144,13 +184,21 @@ public class AccountSettingsActivity extends AppCompatActivity {
         String newPhoneNumber = PhoneNumberEdit.getText().toString();
 
         // Create a new User object with the updated data
-        User updatedUser = new User(newUsername, newEmail, newPassword, "", newFullName, newPhoneNumber);
+        User updatedUser = new User(newUsername, newEmail, newPassword, "", newFullName, newPhoneNumber, "");
 
         // Update the user data in the database
         long rowsAffected = dbHelper.updateUser(updatedUser);
 
         if (rowsAffected > 0) {
             Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show();
+
+            // Update image path if a new image was selected
+            if (selectedImageUri != null) {
+                String imagePath = selectedImageUri.toString();
+                // Update the User object with the new image path
+                dbHelper.updateProfilePicturePath(newUsername, imagePath);
+            }
+
             reloadUserData();
         } else {
             Toast.makeText(this, "Failed to update data", Toast.LENGTH_SHORT).show();
@@ -158,6 +206,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         // Disable editing after updating
         setEditingEnabled(false);
     }
+
 
     // Method to reload user data and populate the UI
     private void reloadUserData() {
@@ -180,4 +229,22 @@ public class AccountSettingsActivity extends AppCompatActivity {
             PhoneNumberEdit.setText(currentUser.getPhoneNumber());
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            // Get the Uri of the selected image
+            selectedImageUri = data.getData();
+
+            // Set the selected image to the profileImageView
+            profileImageView.setImageURI(selectedImageUri);
+
+            // Optionally, you might want to save the image URI or handle it for further use
+            // For instance:
+            // String imagePath = selectedImageUri.toString();
+            // Save the imagePath in SharedPreferences or update the User object with the new image path
+        }
+    }
+
 }

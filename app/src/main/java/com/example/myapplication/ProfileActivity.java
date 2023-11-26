@@ -4,10 +4,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Button posthistory;
     private DatabaseHelper dbHelper;
     TextView fullNameText;
+    ImageView profilePic;
 
 
     @Override
@@ -32,6 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Initialize UI elements and database helper
         BottomNavigationView bnv = findViewById(R.id.bottom_Navigation);
+        profilePic = findViewById(R.id.profilePic);
         logout = findViewById(R.id.logout);
         posthistory = findViewById(R.id.history);
         settings = findViewById(R.id.settings);
@@ -43,6 +47,19 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String currentuser = intent.getStringExtra("username");
         fullNameText.setText(currentuser);
+
+        // Get profile picture path associated with the session token
+        String sessionToken = SharedPreferencesHelper.getSessionToken(this);
+        String profilePicturePath = SharedPreferencesHelper.getUserPicturePath(this, sessionToken);
+
+        // Set the profile picture if available
+        if (profilePicturePath != null && !profilePicturePath.isEmpty()) {
+            Uri profilePictureUri = Uri.parse(profilePicturePath);
+            profilePic.setImageURI(profilePictureUri);
+        } else {
+            profilePic.setImageResource(R.drawable.user); // Set a default image
+        }
+
 
         // Set up a confirmation dialog for logout
         confirmationDialog = new Dialog(this);
@@ -61,6 +78,20 @@ public class ProfileActivity extends AppCompatActivity {
         bnv.setSelectedItemId(R.id.profile);
 
         final int[] currentPageId = {R.id.profile}; // Initialize with the current page
+
+        User user = dbHelper.getUserByUsername(currentuser);
+        if (user != null) {
+            profilePicturePath = user.getProfilePicturePath();
+            if (profilePicturePath != null && !profilePicturePath.isEmpty()) {
+                // Load and display the image in the ImageView
+                Uri profilePictureUri = Uri.parse(profilePicturePath);
+                profilePic.setImageURI(profilePictureUri);
+            } else {
+                // Set a default image or placeholder if the profile picture path is empty or null
+                profilePic.setImageResource(R.drawable.user);
+            }
+        }
+
 
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override

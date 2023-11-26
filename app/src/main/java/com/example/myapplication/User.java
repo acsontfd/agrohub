@@ -8,6 +8,7 @@ public class User {
     private String userType;
     private String full_name;
     private String phoneNumber;
+    private String profilePicturePath;
 
     public User() {
         // Default constructor
@@ -15,13 +16,14 @@ public class User {
 
     // Constructor to initialize User object
     public User(String name, String email, String password, String userType,
-                String fullName, String phoneNumber) {
+                String fullName, String phoneNumber, String profilePicturePath) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.userType = userType;
         this.full_name = fullName;
         this.phoneNumber = phoneNumber;
+        this.profilePicturePath = profilePicturePath;
     }
 
     // Getters and setters for User attributes
@@ -88,4 +90,13 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+    public String getProfilePicturePath() {
+        return profilePicturePath;
+    }
+
+    public void setProfilePicturePath(String profilePicturePath) {
+        this.profilePicturePath = profilePicturePath;
+    }
 }
+
+
