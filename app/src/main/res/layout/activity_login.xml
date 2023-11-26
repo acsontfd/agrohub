@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/rememberCheckBox"
         android:backgroundTint="@color/green"
+        android:theme="@style/AppTheme"
         android:text="Login"
         android:textStyle="bold"
         android:textSize="16dp"/>
