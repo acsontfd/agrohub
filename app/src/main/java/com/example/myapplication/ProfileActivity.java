@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import static com.example.myapplication.AccountSettingsActivity.PICK_IMAGE_REQUEST;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,11 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {
+    private static final int PICK_IMAGE_REQUEST = 1;
     private Button logout, settings, delete;
     private Dialog confirmationDialog;
     private Dialog deleteAccountConfirmation;
@@ -230,6 +234,22 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            // Check if the result contains the updated profile picture path
+            if (data.hasExtra("updatedProfilePicturePath")) {
+                String updatedProfilePicturePath = data.getStringExtra("updatedProfilePicturePath");
+
+                // Update the profile picture in the ImageView
+                if (updatedProfilePicturePath != null && !updatedProfilePicturePath.isEmpty()) {
+                    Uri updatedProfilePictureUri = Uri.parse(updatedProfilePicturePath);
+                    profilePic.setImageURI(updatedProfilePictureUri);
+                }
+            }
+        }
     }
 }
