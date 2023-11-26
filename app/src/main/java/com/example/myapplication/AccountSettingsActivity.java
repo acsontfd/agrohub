@@ -78,13 +78,24 @@ public class AccountSettingsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String currentuser = intent.getStringExtra("username");
         String currentUsername = currentuser;
+
+        String sessionToken = SharedPreferencesHelper.getSessionToken(this);
+        String storedImageUri = SharedPreferencesHelper.getUserPicturePath(this, "selected");
+
+        // Check if a stored URI exists, then load the profile picture
+        if (storedImageUri != null && !storedImageUri.isEmpty()) {
+            selectedImageUri = Uri.parse(storedImageUri);
+            profileImageView.setImageURI(selectedImageUri);
+        }
         User currentUser = dbHelper.getUserByUsername(currentUsername);
+
         if (currentUser != null) {
             // Display user data
             fullName.setText(currentUser.getFullName());
             username.setText(currentUser.getName());
             Email.setText(currentUser.getEmail());
             PhoneNumber.setText(currentUser.getPhoneNumber());
+            existingImageUri = Uri.parse(currentUser.getProfilePicturePath());
 
             // Populate editable fields
             fullNameEdit.setText(currentUser.getFullName());
@@ -92,7 +103,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
             EmailEdit.setText(currentUser.getEmail());
             PasswordEdit.setText(currentUser.getPassword());
             PhoneNumberEdit.setText(currentUser.getPhoneNumber());
-            existingImageUri = Uri.parse(currentUser.getProfilePicturePath());
             if (existingImageUri != null) {
                 profileImageView.setImageURI(existingImageUri);
             } else {
@@ -197,6 +207,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 String imagePath = selectedImageUri.toString();
                 // Update the User object with the new image path
                 dbHelper.updateProfilePicturePath(newUsername, imagePath);
+                if (selectedImageUri != null) {
+                    SharedPreferencesHelper.saveUserPicturePath(this, "selected", selectedImageUri.toString());
+                }
             }
 
             reloadUserData();
@@ -239,6 +252,11 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
             // Set the selected image to the profileImageView
             profileImageView.setImageURI(selectedImageUri);
+
+            // Update the existingImageUri with the selected image URI
+            existingImageUri = selectedImageUri;
+            SharedPreferencesHelper.saveUserPicturePath(this, "selected", selectedImageUri.toString());
+
 
             // Optionally, you might want to save the image URI or handle it for further use
             // For instance:
