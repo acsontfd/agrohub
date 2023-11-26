@@ -3,8 +3,11 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -103,6 +106,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
             EmailEdit.setText(currentUser.getEmail());
             PasswordEdit.setText(currentUser.getPassword());
             PhoneNumberEdit.setText(currentUser.getPhoneNumber());
+
             if (existingImageUri != null) {
                 profileImageView.setImageURI(existingImageUri);
             } else {
@@ -120,6 +124,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 // Intent to open gallery for image selection
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, PICK_IMAGE_REQUEST);
+                
             }
         });
 
@@ -193,8 +198,11 @@ public class AccountSettingsActivity extends AppCompatActivity {
         String newPassword = PasswordEdit.getText().toString();
         String newPhoneNumber = PhoneNumberEdit.getText().toString();
 
+        String profilePicturePath = getRealPathFromURI(selectedImageUri);
+
         // Create a new User object with the updated data
-        User updatedUser = new User(newUsername, newEmail, newPassword, "", newFullName, newPhoneNumber, "");
+        User updatedUser = new User(newUsername, newEmail, newPassword, "", newFullName, newPhoneNumber, profilePicturePath);
+        updatedUser.setProfilePicturePath(profilePicturePath);
 
         // Update the user data in the database
         long rowsAffected = dbHelper.updateUser(updatedUser);
@@ -204,11 +212,18 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
             // Update image path if a new image was selected
             if (selectedImageUri != null) {
-                String imagePath = selectedImageUri.toString();
+                String imagePath = getRealPathFromURI(selectedImageUri);
+
                 // Update the User object with the new image path
                 dbHelper.updateProfilePicturePath(newUsername, imagePath);
-                if (selectedImageUri != null) {
+                if (imagePath != null) {
                     SharedPreferencesHelper.saveUserPicturePath(this, "selected", selectedImageUri.toString());
+
+                    // Set the result intent to include the updated profile picture path
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("updatedProfilePicturePath", imagePath);
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
                 }
             }
 
@@ -240,6 +255,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
             EmailEdit.setText(currentUser.getEmail());
             PasswordEdit.setText(currentUser.getPassword());
             PhoneNumberEdit.setText(currentUser.getPhoneNumber());
+
         }
     }
     @Override
@@ -256,13 +272,29 @@ public class AccountSettingsActivity extends AppCompatActivity {
             // Update the existingImageUri with the selected image URI
             existingImageUri = selectedImageUri;
             SharedPreferencesHelper.saveUserPicturePath(this, "selected", selectedImageUri.toString());
-
-
-            // Optionally, you might want to save the image URI or handle it for further use
-            // For instance:
-            // String imagePath = selectedImageUri.toString();
-            // Save the imagePath in SharedPreferences or update the User object with the new image path
         }
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(contentUri, projection, null, null, null);
+        if (cursor == null) {
+            Log.e("ImagePath", "Cursor is null");
+            return null;
+        }
+
+        if (cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            String path = cursor.getString(columnIndex);
+            Log.d("ImagePath", "Image Path from URI: " + path);
+            cursor.close();
+            return path;
+        } else {
+            Log.e("ImagePath", "Cursor.moveToFirst() returned false");
+        }
+
+        cursor.close();
+        return null;
     }
 
 }
