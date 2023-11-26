@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class CommunityActivity extends AppCompatActivity {
     private PostAdapter postAdapter;
     private postDatabaseHelper pdbHelper;
     private TextView fullNameText;
+    private ImageView profilePic;
 
 
     @Override
@@ -45,10 +47,24 @@ public class CommunityActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         pdbHelper = new postDatabaseHelper(this);
         fullNameText = findViewById(R.id.fullNameText);
+        profilePic = findViewById(R.id.profilePicture);
 
         Intent intent = getIntent();
         String currentuser = intent.getStringExtra("username");
         fullNameText.setText(currentuser);
+
+
+        String sessionToken = SharedPreferencesHelper.getSessionToken(this);
+        String profilePicturePath = SharedPreferencesHelper.getUserPicturePath(this, sessionToken);
+
+        // Set the profile picture if available
+        if (profilePicturePath != null && !profilePicturePath.isEmpty()) {
+            Uri profilePictureUri = Uri.parse(profilePicturePath);
+            profilePic.setImageURI(profilePictureUri);
+        } else {
+            profilePic.setImageResource(R.drawable.user); // Set a default image if no profile picture is available
+        }
+
 
         // Retrieve posts from the database and set up RecyclerView
         List<Post> postList = pdbHelper.getAllPosts();

@@ -17,6 +17,34 @@
         android:layout_marginTop="16dp"
         android:layout_gravity="center"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="12dp">
+
+        <ImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:contentDescription="Profile Picture"
+            android:scaleType="centerCrop"
+            android:src="@drawable/user"
+            android:padding="10dp"/>
+
+        <Button
+            android:id="@+id/changeProfilePictureButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#4CAF50"
+            android:text="Change Profile Picture"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/fullName"
         android:layout_width="match_parent"

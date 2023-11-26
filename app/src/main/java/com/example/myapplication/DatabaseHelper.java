@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.w3c.dom.Text;
+
 /**
  * Helper class for managing the SQLite database used for user registration.
  */
@@ -27,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_TYPE = "user_type";
     private static final String COLUMN_FULL_NAME = "full_name";
     private static final String COLUMN_PHONE_NUMBER = "phone_number";
+    private static final String COLUMN_PROFILE_PICTURE = "profile_picture";
 
     // SQL query to create the users table
     private static final String TABLE_CREATE =
@@ -37,7 +40,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_PASSWORD + " TEXT, " +
                     COLUMN_USER_TYPE + " TEXT, " +
                     COLUMN_FULL_NAME + " TEXT, " +
-                    COLUMN_PHONE_NUMBER + " TEXT);";
+                    COLUMN_PHONE_NUMBER + " TEXT, " +
+                    COLUMN_PROFILE_PICTURE + " TEXT);";
 
     /**
      * Constructor for DatabaseHelper.
@@ -77,6 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_TYPE, user.getUserType());
         values.put(COLUMN_FULL_NAME, user.getFullName());
         values.put(COLUMN_PHONE_NUMBER, user.getPhoneNumber());
+        values.put(COLUMN_PROFILE_PICTURE, user.getProfilePicturePath());
         long result = db.insert(TABLE_USERS, null, values);
         db.close();
         return result;
@@ -105,6 +110,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected;
     }
 
+    public void updateProfilePicturePath(String username, String imagePath) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PROFILE_PICTURE, imagePath);
+
+        // Update the profile picture path for the user in the database
+        db.update(TABLE_USERS, values, COLUMN_NAME + " = ?", new String[]{username});
+        db.close();
+    }
+
+
     // Method to retrieve a user by their username
     @SuppressLint("Range")
     public User getUserByUsername(String username) {
@@ -124,7 +140,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_PASSWORD,
                 COLUMN_USER_TYPE,
                 COLUMN_FULL_NAME,
-                COLUMN_PHONE_NUMBER
+                COLUMN_PHONE_NUMBER,
+                COLUMN_PROFILE_PICTURE
         };
 
         // Define the selection criteria (WHERE clause)
@@ -153,6 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.setUserType(cursor.getString(cursor.getColumnIndex(COLUMN_USER_TYPE)));
             user.setFullName(cursor.getString(cursor.getColumnIndex(COLUMN_FULL_NAME)));
             user.setPhoneNumber(cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_NUMBER)));
+            user.setProfilePicturePath(cursor.getString(cursor.getColumnIndex(COLUMN_PROFILE_PICTURE)));
         }
 
         // Close the cursor and database
