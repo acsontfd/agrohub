@@ -33,16 +33,6 @@
             android:src="@drawable/user"
             android:padding="10dp"/>
 
-        <Button
-            android:id="@+id/changeProfilePictureButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/green"
-            android:theme="@style/AppTheme"
-            android:text="Change Profile Picture"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="gone"/>
     </LinearLayout>
 
     <TextView
