@@ -45,7 +45,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private Button Confirm;
     private Button Cancel;
     private Button Edit;
-    private Button changeProfilePictureButton;
 
     public AccountSettingsActivity() {
     }
@@ -71,7 +70,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
         PasswordEdit = findViewById(R.id.passwordEdit);
         PhoneNumberEdit = findViewById(R.id.phoneNumberEdit);
         profileImageView = findViewById(R.id.profileImageView);
-        changeProfilePictureButton = findViewById(R.id.changeProfilePictureButton);
 
         Confirm = findViewById(R.id.Confirm);
         Cancel = findViewById(R.id.Cancel);
@@ -117,17 +115,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         // Disable editing initially
         setEditingEnabled(false);
-
-        changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Intent to open gallery for image selection
-                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, PICK_IMAGE_REQUEST);
-                
-            }
-        });
-
 
         // Enable editing on Edit button click
         Edit.setOnClickListener(new View.OnClickListener() {
@@ -184,9 +171,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
         Confirm.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
         Cancel.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
         Edit.setVisibility(isEnabled ? View.GONE : View.VISIBLE);
-
-        // Show/hide changeProfilePictureButton based on editing mode
-        changeProfilePictureButton.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
 
     }
 
